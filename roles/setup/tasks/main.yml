@@ -5,8 +5,10 @@
 
 - name: upgrade apt packages
   become: yes
-  apt:
-    upgrade: yes
+  # apt:
+  #   upgrade: yes
+  shell: |
+    apy upgrade -y
 
 - name: remove dependencies that are no longer required
   become: yes
