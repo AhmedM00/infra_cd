@@ -5,10 +5,14 @@
 
 - name: upgrade apt packages
   become: yes
-  # apt:
-  #   upgrade: yes
+  apt:
+    upgrade: yes
+
+
+- name: correct apt packages
+  become: yes
   shell: |
-    sudo apt-get upgrade -y
+    sudo dpkg --configure -a
 
 - name: remove dependencies that are no longer required
   become: yes
