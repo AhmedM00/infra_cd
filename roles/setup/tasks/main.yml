@@ -8,7 +8,7 @@
   # apt:
   #   upgrade: yes
   shell: |
-    apy upgrade -y
+    apt upgrade -y
 
 - name: remove dependencies that are no longer required
   become: yes
