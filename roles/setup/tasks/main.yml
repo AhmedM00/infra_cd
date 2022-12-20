@@ -14,10 +14,10 @@
 #   shell: |
 #     sudo dpkg --configure -a
 
-- name: remove dependencies that are no longer required
-  become: yes
-  apt:
-    autoremove: yes
+# - name: remove dependencies that are no longer required
+#   become: yes
+#   apt:
+#     autoremove: yes
 
 - name: install node
   become: yes
