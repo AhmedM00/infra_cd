@@ -19,28 +19,46 @@ jobs:
   #               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
   #               --region us-east-1
 
-  configure_infrastructure: 
+  # configure_infrastructure: 
+  #   docker:
+  #     - image: python:latest
+  #   steps:
+  #     - checkout
+  #     - add_ssh_keys:
+  #         fingerprints: 
+  #           - "b8:86:64:75:83:97:06:da:35:38:ae:12:34:6d:91:78"
+  #           #- "9c:a4:01:43:cc:7f:2c:1c:b6:e8:6f:82:c1:d5:17:d3"
+  #     - run:
+  #         name: Install Ansible
+  #         command: |
+  #           apt-get update && \
+  #           apt-get dist-upgrade -y && \
+  #           apt install ansible -y
+  #     - run:
+  #         name: Run Playbook and Configure server
+  #         command: |
+  #           ansible-playbook -i inventory.txt main.yml 
+
+  smoke_test:
     docker:
-      - image: python:latest
+      - image: alpine:latest
     steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints: 
-            - "b8:86:64:75:83:97:06:da:35:38:ae:12:34:6d:91:78"
-            #- "9c:a4:01:43:cc:7f:2c:1c:b6:e8:6f:82:c1:d5:17:d3"
-      - run:
-          name: Install Ansible
+      - run: apk add --update curl
+      - run: 
+          name: smoke test
           command: |
-            apt-get update && \
-            apt-get dist-upgrade -y && \
-            apt install ansible -y
-      - run:
-          name: Run Playbook and Configure server
-          command: |
-            ansible-playbook -i inventory.txt main.yml 
+            URL=http://ec2-3-84-59-252.compute-1.amazonaws.com:3000/
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
+
 
 workflows:
   myWorkflow:
     jobs:
       # - create_infrastructure
-      - configure_infrastructure
+      # - configure_infrastructure
+      - smoke_test
