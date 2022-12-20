@@ -15,18 +15,18 @@ commands:
           command: |
             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
 jobs:
-  create_infrastructure: 
-      docker:
-        - image: amazon/aws-cli
-      steps:
-        - checkout
-        - run:
-            name: Create Cloudformation Stack
-            command: |
-              aws cloudformation deploy \
-                --template-file template.yml \
-                --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-                --region us-east-1
+  # create_infrastructure: 
+  #     docker:
+  #       - image: amazon/aws-cli
+  #     steps:
+  #       - checkout
+  #       - run:
+  #           name: Create Cloudformation Stack
+  #           command: |
+  #             aws cloudformation deploy \
+  #               --template-file template.yml \
+  #               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+  #               --region us-east-1
 
   # configure_infrastructure: 
   #   docker:
@@ -83,10 +83,10 @@ jobs:
         name: Execute bucket.yml - Create Cloudformation Stack
         command: |
           aws cloudformation deploy \
-          --template-file bucket.yml \
-          --stack-name stack-create-bucket-${CIRCLE_WORKFLOW_ID:0:5} \
-          --region us-east-1 \
-          --parameter-overrides MyBucketName="mybucket-${CIRCLE_WORKFLOW_ID:0:5}"
+          --template-file template.yml \
+          --stack-name stack-create-bucket-${CIRCLE_WORKFLOW_ID:0:5} 
+          
+          
     # Uncomment the step below if yoou wish to upload all contents of the current directory to the S3 bucket
     - run: aws s3 sync index.html s3://mybucket-${CIRCLE_WORKFLOW_ID:0:5} --delete
 
@@ -140,12 +140,12 @@ jobs:
 workflows:
   myWorkflow:
     jobs:
-      - create_infrastructure
+      #- create_infrastructure
       # - configure_infrastructure
       # - smoke_test:
       #     requires:
       #       - create_infrastructure
-      #- create_and_deploy_front_end
+      - create_and_deploy_front_end
       # - promote_to_production:
       #     requires: 
       #       - create_and_deploy_front_end
